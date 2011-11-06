@@ -73,6 +73,7 @@ class LSA
 		$lsm->U = $result->U;
 		$lsm->S = $result->S;
 		$lsm->V = $result->V;
+		$lsm->keywords = $keywords;
 
 		// 返却するlsa_svd作成 LSM
 		$i = 0;
@@ -121,6 +122,30 @@ class LSA
 
 
 	}
+	// 特徴ベクトルの生成
+	public static function gen_feature_vector2($target,$co,$lsm)
+	{
+		// vectorを作成.
+		$i=0;
+		$to_eigen_vector  = array();
+		foreach ($co as $key => $vector) {
+			//var_dump($vector);
+			if(empty($vector[$target]) || $vector[$target]==0){
+				$to_eigen_vector[$i]=0;
+			}else {
+				$to_eigen_vector[$i]=$vector[$target];
+			}
+			$i++;
+		}
+
+
+		// 特徴ベクトルを計算		
+		$res = Eigen_Feature_Vector($lsm->U,$lsm->S,$to_eigen_vector);
+
+		return $res;
+
+
+	}
 	// cosの計算 
 	public static function cos($feature_vector1,$feature_vector2)
 	{
@@ -136,6 +161,7 @@ class lsm
 	var $S = array();
 	var $V = array();
 	var $LSM = array();
+	var $keywords = array();
 }
 
 
